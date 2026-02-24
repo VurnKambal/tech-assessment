@@ -6,6 +6,7 @@ import { Chip, FormControl, Input, InputAdornment, Tooltip } from "@mui/material
 import { PiMagnifyingGlass } from "react-icons/pi";
 import { FiFilter } from "react-icons/fi";
 import CreateUser from "./CreateEmployee";
+import CreateClient from "./CreateClient";
 import Filter from "./Filter";
 import { searchUserReducer } from "../../redux/reducer/user";
 
@@ -23,19 +24,20 @@ const Topbar = ({ view, setView, setIsFiltered, isFiltered }) => {
   const descriptionElementRef = useRef(null);
 
   ///////////////////////////////////////// STATES ///////////////////////////////////////////////////
-  const [open, setOpen] = useState(false);
+  const [openUser, setOpenUser] = useState(false);
+  const [openClient, setOpenClient] = useState(false);
   const [openFilters, setOpenFilters] = useState(false);
   const [scroll, setScroll] = useState("paper");
 
   ///////////////////////////////////////// USE EFFECTS ///////////////////////////////////////////////////
   useEffect(() => {
-    if (open) {
+    if (openUser || openClient) {
       const { current: descriptionElement } = descriptionElementRef;
       if (descriptionElement != null) {
         descriptionElement.focus();
       }
     }
-  }, [open]);
+  }, [openUser, openClient]);
 
   ///////////////////////////////////////// FUNCTIONS ///////////////////////////////////////////////////
   const handleSearch = (searchTerm) => {
@@ -45,8 +47,12 @@ const Topbar = ({ view, setView, setIsFiltered, isFiltered }) => {
     setOpenFilters((pre) => !pre);
   };
 
-  const handleCreateopen = (scrollType) => () => {
-    setOpen(true);
+  const handleCreateOpen = (userType, scrollType) => () => {
+    if (userType === "user") {
+      setOpenUser(true);
+    } else if (userType === "client") {
+      setOpenClient(true);
+    }
     setScroll(scrollType);
   };
 
@@ -94,7 +100,7 @@ const Topbar = ({ view, setView, setIsFiltered, isFiltered }) => {
             </Tooltip>
             <div>
               <Tooltip title="Add New Employee" placement="top" arrow>
-                <div onClick={handleCreateopen("body")}>
+                <div onClick={handleCreateOpen("user", "body")}>
                   <button className="bg-primary-red hover:bg-red-400 transition-all text-white w-[44px] h-[44px] flex justify-center items-center rounded-full shadow-xl">
                     <Add />
                   </button>
@@ -120,10 +126,20 @@ const Topbar = ({ view, setView, setIsFiltered, isFiltered }) => {
                 />
               </FormControl>
             </div>
+            <div>
+              <Tooltip title="Add New Client" placement="top" arrow>
+                <div onClick={handleCreateOpen("client", "body")}>
+                  <button className="bg-primary-red hover:bg-red-400 transition-all text-white w-[44px] h-[44px] flex justify-center items-center rounded-full shadow-xl">
+                    <Add />
+                  </button>
+                </div>
+              </Tooltip>
+            </div>
           </div>
         )}
       </div>
-      <CreateUser open={open} scroll={scroll} setOpen={setOpen} />
+      <CreateUser open={openUser} scroll={scroll} setOpen={setOpenUser} />
+      <CreateClient open={openClient} scroll={scroll} setOpen={setOpenClient} />
       <Filter open={openFilters} setOpen={setOpenFilters} setIsFiltered={setIsFiltered} />
     </div>
   );
