@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createEmployee } from "../../redux/action/user";
+import { validateUserForm } from "../../utils";
 import { useNavigate } from "react-router-dom";
 import Topbar from "./Topbar";
 import {
@@ -45,13 +46,7 @@ const CreateUser = ({ open, setOpen, scroll }) => {
   //////////////////////////////////////// FUNCTIONS /////////////////////////////////////
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { firstName, lastName, username, password, phone, email } = employeeData;
-    const newErrors = {};
-    if (!firstName) newErrors.firstName = "First name is required";
-    if (!lastName) newErrors.lastName = "Last name is required";
-    if (!username) newErrors.username = "Username is required";
-    if (!password) newErrors.password = "Password is required";
-    if (!phone) newErrors.phone = "Phone number is required";
+    const newErrors = validateUserForm(employeeData);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -145,6 +140,8 @@ const CreateUser = ({ open, setOpen, scroll }) => {
                     placeholder="Optional"
                     value={employeeData.email}
                     onChange={(e) => handleChange('email', e.target.value)}
+                    error={!!errors.email}
+                    helperText={errors.email}
                   />
                 </td>
               </tr>

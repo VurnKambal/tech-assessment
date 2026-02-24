@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createClient } from "../../redux/action/user";
+import { validateUserForm } from "../../utils";
 import {
   Divider,
   Dialog,
@@ -36,13 +37,7 @@ const CreateClient = ({ open, setOpen, scroll }) => {
   //////////////////////////////////////// FUNCTIONS /////////////////////////////////////
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { firstName, lastName, username, password, phone } = clientData;
-    const newErrors = {};
-    if (!firstName) newErrors.firstName = "First name is required";
-    if (!lastName) newErrors.lastName = "Last name is required";
-    if (!username) newErrors.username = "Username is required";
-    if (!password) newErrors.password = "Password is required";
-    if (!phone) newErrors.phone = "Phone number is required";
+    const newErrors = validateUserForm(clientData);
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
       return;
@@ -137,6 +132,8 @@ const CreateClient = ({ open, setOpen, scroll }) => {
                       placeholder="Optional"
                       value={clientData.email}
                       onChange={(e) => handleChange("email", e.target.value)}
+                      error={!!errors.email}
+                      helperText={errors.email}
                     />
                   </td>
                 </tr>
