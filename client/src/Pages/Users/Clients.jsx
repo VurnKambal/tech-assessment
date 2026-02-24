@@ -13,6 +13,7 @@ import { Dropdown, Menu, MenuButton, MenuItem, menuItemClasses } from "@mui/base
 import Filter from "./Filter";
 import User from "./User";
 import DeleteClient from "./Delete";
+import EditClient from "./EditClient";
 
 const blue = {
   100: "#DAECFF",
@@ -139,6 +140,12 @@ const Clients = () => {
       headerClassName: "super-app-theme--header",
       renderCell: (params) => (
         <div className="flex gap-[10px]">
+          <Tooltip placement="top" title="Edit" arrow>
+            <CiEdit
+              onClick={() => handleOpenEditModal(params.row)}
+              className="cursor-pointer text-blue-500 text-[23px] hover:text-blue-400"
+            />
+          </Tooltip>
           {
             loggedUser?.role != 'employee' &&
             <Tooltip placement="top" title="Delete" arrow>
@@ -187,6 +194,7 @@ const Clients = () => {
     <div className="w-full">
 
       <DeleteClient open={openDeleteModal} setOpen={setOpenDeleteModal} userId={selectedUserId} />
+      <EditClient open={openEditModal} setOpen={setOpenEditModal} />
       <Filter open={openFilters} setOpen={setOpenFilters} />
       <User open={openUser} setOpen={setOpenUser} />
 
